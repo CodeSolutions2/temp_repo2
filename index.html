@@ -9,10 +9,10 @@
 </ol>
 
 <!-- Straight slider -->
-<input type="range" id="slider_amplitude" name="slider_amplitude" value="0" min="1" max="10" step="1" accent-color: green; /><label for="slider_amplitude">noise amplitude</label>
+<input type="range" id="slider_amplitude" name="slider_amplitude" value="0" min="1" max="10" step="1" /><label for="slider_amplitude">noise amplitude</label>
 
 <!--Circular slider -->
-<input type="range" class="circular" id="slider_frequency" name="slider_frequency" value="0" min="1" max="10" step="1" /><label for="slider_frequency">noise frequency</label>
+<input type="range" class="circular" id="slider_frequency" name="slider_frequency" value="0" min="1" max="6.24" step="0.1" /><label for="slider_frequency">noise frequency</label>
 
 <div id="data_display" style="display:block; text-align: left; width: 600px;"></div>
 	
@@ -23,9 +23,13 @@
 
 <style>
 
+input#slider_amplitude { accent-color: green; }
+
+input#slider_frequency { accent-color: pink; }
+	
 .circular { 
 	-webkit-appearance: none;
-	/* transform-origin: 50% 50%; */
+	transform-origin: 50% 50%;
 	border-radius: 50%;
 }
 	
@@ -99,6 +103,13 @@ async function create_audio_data(audioContext) {
 	
 	// -------------------
 
+	const A = document.getElementById("slider_amplitude").value;
+	const A_max = document.getElementById("slider_amplitude").max;
+	const k = document.getElementById("slider_frequency").value;  // wave number [0, 2*Math.PI]
+
+	const max_noise = 0.1;
+	const A_max_noise_compensator = 1 - max_noise;
+	
 	// Create an arrayBuffer
 	const channels = 2; 
 	const frameCount = audioContext.sampleRate * duration_seconds; // sample_length
@@ -110,17 +121,24 @@ async function create_audio_data(audioContext) {
 		
 		// Fill the buffer with audio data per channel
 		const channelData_AudioBuffer = WhiteNoise_AudioBuffer.getChannelData(channel);
-	
+
+		
+		
 		// One knows the length of channelData_test because of the designated sample_length and sample_rate
 		// frameCount OR channelData_AudioBuffer.length
 		for (let i = 0; i < channelData_AudioBuffer.length; i++) {
 
+			// Way 0: amplitude modulation
 			// Math.random() generates a number from 0 and less than 1.
-			var random_val_from_0_to_10 = Math.random() * document.getElementById("slider_amplitude").value;
-			
-			channelData_AudioBuffer[i] = (random_val_from_0_to_10/document.getElementById("slider_amplitude").max) * 2 - 1
+			// var random_val_from_0_to_A = Math.random() * A; // a random value [0, A]
+			// channelData_AudioBuffer[i] = (random_val_from_0_to_A/A_max) * 2 - 1; // value from [-1, 1]
 
-			// Math.random() * 2 - 1// Generate random values between -1 and 1
+			// Way 1: 
+			var noise = Math.random() * A; // a random value [0, A]
+			var noise_normalized = max_noise * (noise/A_max); // a random value [0, max_noise]
+			channelData_AudioBuffer[i] = A_max_noise_compensator*(Math.sin(k*i)) + noise_normalized;
+
+			
 		}
 	}
 	console.log('WhiteNoise_AudioBuffer: ', WhiteNoise_AudioBuffer);
