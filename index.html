@@ -167,8 +167,19 @@ async function create_audio_data(audioContext) {
 		// frameCount OR channelData_AudioBuffer.length
 		for (let i = 0; i < channelData_AudioBuffer.length; i++) {
 			obj.i = i;
-			// channelData_AudioBuffer[i] = await create_array(obj, 'ampl_only');
-			channelData_AudioBuffer[i] = await create_array(obj, 'ampl_freq');
+			if (method == 'ampl_only') {
+				// Way 0: amplitude modulation only
+				// Math.random() generates a number from 0 and less than 1.
+				var random_val_from_0_to_A = Math.random() * obj.A; // a random value [0, A]
+				channelData_AudioBuffer[i] = (random_val_from_0_to_A/obj.A_max) * 2 - 1; // value from [-1, 1]
+				
+			} else if (method == 'ampl_freq') {
+				// Way 1: amplitude frequency modulation
+				var noise = Math.random() * obj.A; // a random value [0, A]
+				var noise_normalized = obj.max_noise * (noise/obj.A_max); // a random value [0, max_noise]
+				channelData_AudioBuffer[i] = obj.A_max_noise_compensator*(Math.sin(obj.k*obj.i)) + noise_normalized;
+			}
+			
 		}
 	}
 	// console.log('WhiteNoise_AudioBuffer: ', WhiteNoise_AudioBuffer);
@@ -194,18 +205,7 @@ async function create_audio_data(audioContext) {
 
 async function create_array(obj, method) { 
 
-	if (method == 'ampl_only') {
-		// Way 0: amplitude modulation only
-		// Math.random() generates a number from 0 and less than 1.
-		var random_val_from_0_to_A = Math.random() * obj.A; // a random value [0, A]
-		return (random_val_from_0_to_A/obj.A_max) * 2 - 1; // value from [-1, 1]
-		
-	} else if (method == 'ampl_freq') {
-		// Way 1: amplitude frequency modulation
-		var noise = Math.random() * obj.A; // a random value [0, A]
-		var noise_normalized = obj.max_noise * (noise/obj.A_max); // a random value [0, max_noise]
-		return obj.A_max_noise_compensator*(Math.sin(obj.k*obj.i)) + noise_normalized;
-	}
+	
 	
 }
 	
