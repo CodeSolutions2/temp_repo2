@@ -73,9 +73,8 @@ async function play_filter_noise() {
 
 	// -------------------
 	
-	const [WhiteNoise_AudioBuffer, WhiteNoiseData_TypeArray] = await create_audio_data(audioContext);
+	const WhiteNoise_AudioBuffer = await create_audio_data(audioContext);
 	// WhiteNoise_AudioBuffer:  AudioBuffer { sampleRate: 48000, length: 96000, duration: 2, numberOfChannels: 2 }
-	// WhiteNoiseData_TypeArray: buffer, byteLength, byteOffset, length
 	
 	sourceElement.buffer = WhiteNoise_AudioBuffer;
 	sourceElement.id = "sourceElement_id";			
@@ -186,27 +185,7 @@ async function create_audio_data(audioContext) {
 
 	// -------------------
 	
-	// Make a TypedArray with only one channel
-	const WhiteNoiseData_TypeArray = new Float32Array(audioContext.sampleRate);
-
-	
-	
-	for (let i = 0; i < WhiteNoiseData_TypeArray.length; i++) {
-	    WhiteNoiseData_TypeArray[i] = Math.random() * 2 - 1; // Generate random values between -1 and 1
-	}
-	// console.log('WhiteNoiseData_TypeArray: ', WhiteNoiseData_TypeArray);
-
-	// -------------------
-	
-	return [WhiteNoise_AudioBuffer, WhiteNoiseData_TypeArray];
-}
-	
-// -----------------------------------------------
-
-async function create_array(obj, method) { 
-
-	
-	
+	return WhiteNoise_AudioBuffer;
 }
 	
 // -----------------------------------------------
