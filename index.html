@@ -43,6 +43,12 @@ input#slider_frequency { accent-color: blue; }
 var counter_value_number;
 	
 // -----------------------------------------------
+	
+window.addEventListener('beforeunload', function() {
+	window.location.href = window.location.href + '?nocache=' + new Date().getTime();
+});
+	
+// -----------------------------------------------
 
 async function processEvent_text_input(event) {
 
