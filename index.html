@@ -9,12 +9,12 @@
 </ol>
 
 <!-- Straight slider -->
-<input type="range" id="slider_amplitude" name="slider_amplitude" value="0" min="1" max="10" step="1" /><label for="slider_amplitude">noise amplitude</label>
+<input type="range" id="slider_amplitude" name="slider_amplitude" value="0" min="1" max="10" step="1" /><label for="slider_amplitude">noise amplitude: <div id="slider_amplitude_value" style="display:block; text-align: left; width: 600px;"></div></label>
 
 <!--Circular slider -->
-<input type="range" class="circular" id="slider_frequency" name="slider_frequency" value="0" min="1" max="6.24" step="0.1" /><label for="slider_frequency">noise frequency</label>
-
-<div id="data_display" style="display:block; text-align: left; width: 600px;"></div>
+<input type="range" class="circular" id="slider_frequency" name="slider_frequency" value="0" min="1" max="6.24" step="0.1" /><label for="slider_frequency">noise frequency: <div id="slider_frequency_value" style="display:block; text-align: left; width: 600px;"></div></label>
+	
+<div id="counter" value=0 style="display:block; text-align: left; width: 600px;"></div>
 	
 <button id="play_filter_noise" onclick="play_filter_noise()" style="display:block">play_filter_noise</button>
 
@@ -25,7 +25,7 @@
 
 input#slider_amplitude { accent-color: green; }
 
-input#slider_frequency { accent-color: pink; }
+input#slider_frequency { accent-color: blue; }
 	
 .circular { 
 	-webkit-appearance: none;
@@ -39,6 +39,19 @@ input#slider_frequency { accent-color: pink; }
   
 <script>
 
+
+// -----------------------------------------------
+	
+async function processEvent_div_counter(event) {
+	console.log('event.value: ', event.value);
+
+	if (event.value < 2) {
+		await play_filter_noise()
+	} 
+	
+}
+
+document.getElementById("counter").addEventListener("change", processEvent_div_counter, false);
 	
 // -----------------------------------------------
 
@@ -64,6 +77,8 @@ async function play_filter_noise() {
 
 	// -------------------
 }
+
+
 
 
 
@@ -104,8 +119,14 @@ async function create_audio_data(audioContext) {
 	// -------------------
 
 	const A = document.getElementById("slider_amplitude").value;
+	document.getElementById("slider_amplitude_value").textContent = A;
+	
 	const A_max = document.getElementById("slider_amplitude").max;
+	
 	const k = document.getElementById("slider_frequency").value;  // wave number [0, 2*Math.PI]
+	document.getElementById("slider_frequency_value").textContent = k;
+
+	// -------------------
 
 	const max_noise = 0.1;
 	const A_max_noise_compensator = 1 - max_noise;
