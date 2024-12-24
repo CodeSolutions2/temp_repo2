@@ -50,13 +50,14 @@ window.addEventListener('beforeunload', function() {
 	
 // -----------------------------------------------
 
-async function processEvent_text_input(event) {
+// async function processEvent_text_input(event) {
+async function processEvent_text_input() {
 
 	console.log('counter changed', counter_value_number);
 	
-	if (counter_value_number < 10) {
-		await play_filter_noise();
-		
+	if (Number(document.getElementById("counter_value").value) < 10) {
+		// await play_filter_noise();
+		console.log("here");
 		// -------------------
 		
 		// Update event
@@ -65,7 +66,7 @@ async function processEvent_text_input(event) {
 	
 }
 	
-document.getElementById("counter_value").addEventListener("change", processEvent_text_input, false);
+//document.getElementById("counter_value").addEventListener("change", processEvent_text_input, false);
 
 // -----------------------------------------------
 
