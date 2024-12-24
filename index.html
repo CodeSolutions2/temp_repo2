@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>    
+
+<h1>Generate white noise</h1>
+<ol type="A">
+	<li>Click on filter_noise to play white noise.</li>
+</ol>
+
+<!-- Straight slider -->
+<input type="range" id="slider_amplitude" name="slider_amplitude" value="0" min="1" max="10" step="1" /><label for="slider_amplitude">noise amplitude</label>
+
+<!--Circular slider -->
+<input type="range" orient="circular" id="slider_frequency" name="slider_frequency" value="0" min="1" max="10" step="1" /><label for="slider_frequency">noise frequency</label>
+
+<div id="data_display" style="display:block; text-align: left; width: 600px;"></div>
+	
+<button id="play_filter_noise" onclick="play_filter_noise()" style="display:block">play_filter_noise</button>
+
+
+<!-- ----------------------------------------------- -->
+
+<style>
+
+</style>
+
+<!-- ----------------------------------------------- -->
+  
+<script>
+
+	
+// -----------------------------------------------
+
+async function play_filter_noise() {
+
+	const audioElement = await create_an_audioElement();
+
+	const audioContext = new AudioContext();
+	// default audioContext.sampleRate is 48000, a common value is 44100
+
+	var sourceElement = audioContext.createBufferSource(audioElement);
+
+	// -------------------
+	
+	const [WhiteNoise_AudioBuffer, WhiteNoiseData_TypeArray] = await create_audio_data(audioContext);
+	// WhiteNoise_AudioBuffer:  AudioBuffer { sampleRate: 48000, length: 96000, duration: 2, numberOfChannels: 2 }
+	// WhiteNoiseData_TypeArray: buffer, byteLength, byteOffset, length
+	
+	sourceElement.buffer = WhiteNoise_AudioBuffer;
+	sourceElement.id = "sourceElement_id";			
+	sourceElement.connect(audioContext.destination);
+	sourceElement.start(0);
+
+	// -------------------
+}
+
+
+
+
+	
+	
+
+// -----------------------------------------------
+// SUBFUNCTIONS
+// -----------------------------------------------
+	
+async function create_an_audioElement() {
+
+	// Create an AudioElement
+	const audioElement = document.createElement('audio');
+	// OR
+	// const audioElement = new Audio();
+	
+	audioElement.setAttribute("controls", true);
+	audioElement.setAttribute('crossOrigin', "anonymous"); // OR "anonymous"
+	audioElement.setAttribute('autoplay', true);
+	audioElement.setAttribute('preload', "auto");
+
+	// https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume
+	audioElement.volume = 0.1; 
+
+	return audioElement;
+}
+
+// ----------------------------------------------------
+
+async function create_audio_data(audioContext) {
+	
+	// Transform audiodata into correct format for source.buffer
+	// https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/createBufferSource
+	const duration_seconds = 2;
+	
+	// -------------------
+
+	// Create an arrayBuffer
+	const channels = 2; 
+	const frameCount = audioContext.sampleRate * duration_seconds; // sample_length
+	const sampleRate = audioContext.sampleRate; // sample_rate
+	const WhiteNoise_AudioBuffer = audioContext.createBuffer(channels, frameCount, sampleRate);
+	WhiteNoise_AudioBuffer.contentType = 'audio/mp3';
+	
+	for (let channel=0; channel<channels; channel++) {
+		
+		// Fill the buffer with audio data per channel
+		const channelData_AudioBuffer = WhiteNoise_AudioBuffer.getChannelData(channel);
+	
+		// One knows the length of channelData_test because of the designated sample_length and sample_rate
+		// frameCount OR channelData_AudioBuffer.length
+		for (let i = 0; i < channelData_AudioBuffer.length; i++) {
+
+			// Math.random() generates a number from 0 and less than 1.
+			var random_val_from_0_to_10 = Math.random() * document.getElementById("slider_amplitude").value;
+			
+			channelData_AudioBuffer[i] = (random_val_from_0_to_10/document.getElementById("slider_amplitude").max) * 2 - 1
+
+			// Math.random() * 2 - 1// Generate random values between -1 and 1
+		}
+	}
+	console.log('WhiteNoise_AudioBuffer: ', WhiteNoise_AudioBuffer);
+
+	// -------------------
+	
+	// Make a TypedArray with only one channel
+	const WhiteNoiseData_TypeArray = new Float32Array(audioContext.sampleRate);
+	
+	for (let i = 0; i < WhiteNoiseData_TypeArray.length; i++) {
+	    WhiteNoiseData_TypeArray[i] = Math.random() * 2 - 1; // Generate random values between -1 and 1
+	}
+	console.log('WhiteNoiseData_TypeArray: ', WhiteNoiseData_TypeArray);
+
+	// -------------------
+	
+	return [WhiteNoise_AudioBuffer, WhiteNoiseData_TypeArray];
+}
+	
+// -----------------------------------------------
+	
+
+</script>
+</body>
+</html>
