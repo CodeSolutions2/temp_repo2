@@ -69,12 +69,14 @@ async function play_filter_noise() {
 	counter_value_number = await Number(document.getElementById("counter_value").value);
 	
 	console.log('counter_value_number: ', counter_value_number);
+
+	var audioContext;
 	
 	if (counter_value_number == 0) {
 		
 		const audioElement = await create_an_audioElement();
-	
-		const audioContext = new AudioContext();
+		
+		audioContext = new AudioContext();
 		// default audioContext.sampleRate is 48000, a common value is 44100
 	
 		var sourceElement = audioContext.createBufferSource(audioElement);
@@ -83,7 +85,6 @@ async function play_filter_noise() {
 	// -------------------
 	
 	const WhiteNoise_AudioBuffer = await create_audio_data(audioContext);
-	// WhiteNoise_AudioBuffer:  AudioBuffer { sampleRate: 48000, length: 96000, duration: 2, numberOfChannels: 2 }
 	
 	sourceElement.buffer = WhiteNoise_AudioBuffer;
 	sourceElement.id = "sourceElement_id";			
