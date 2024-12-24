@@ -64,26 +64,22 @@ document.getElementById("counter_value").addEventListener("change", processEvent
 
 // -----------------------------------------------
 
+var audioElement;
+const audioContext = new AudioContext();
+// default audioContext.sampleRate is 48000, a common value is 44100
+	
 async function play_filter_noise() {
 
 	counter_value_number = await Number(document.getElementById("counter_value").value);
-	
 	console.log('counter_value_number: ', counter_value_number);
-
-	var audioContext;
 	
 	if (counter_value_number == 0) {
-		
-		const audioElement = await create_an_audioElement();
-		
-		audioContext = new AudioContext();
-		// default audioContext.sampleRate is 48000, a common value is 44100
-	
-		var sourceElement = audioContext.createBufferSource(audioElement);
+		var audioElement = await create_an_audioElement();
 	}
 	
 	// -------------------
 	
+	var sourceElement = audioContext.createBufferSource(audioElement);
 	const WhiteNoise_AudioBuffer = await create_audio_data(audioContext);
 	
 	sourceElement.buffer = WhiteNoise_AudioBuffer;
