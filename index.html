@@ -46,8 +46,7 @@ input#slider_frequency { accent-color: blue; }
 // -----------------------------------------------
 	
 const counterEvent = new Event("counterEventName");
-document.getElementById("counter").dispatchEvent(counterEvent);
-	
+
 async function processEvent_div_counter(event) {
 	console.log('event: ', event);
 
@@ -58,6 +57,8 @@ async function processEvent_div_counter(event) {
 }
 	
 document.getElementById("counter").addEventListener("counterEventName", processEvent_div_counter, false);
+
+document.getElementById("counter").dispatchEvent(counterEvent);
 	
 // -----------------------------------------------
 
