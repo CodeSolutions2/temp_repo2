@@ -12,7 +12,7 @@
 <input type="range" id="slider_amplitude" name="slider_amplitude" value="0" min="1" max="10" step="1" accent-color: green; /><label for="slider_amplitude">noise amplitude</label>
 
 <!--Circular slider -->
-<input type="range" orient="circular" id="slider_frequency" name="slider_frequency" value="0" min="1" max="10" step="1" /><label for="slider_frequency">noise frequency</label>
+<input type="range" class="circular" id="slider_frequency" name="slider_frequency" value="0" min="1" max="10" step="1" /><label for="slider_frequency">noise frequency</label>
 
 <div id="data_display" style="display:block; text-align: left; width: 600px;"></div>
 	
@@ -23,7 +23,10 @@
 
 <style>
 
-input[type='range'][orient='circular'] { transform-origin: 50% 50%; border-radius: 50%: }
+.circular { 
+	/* transform-origin: 50% 50%; */
+	border-radius: 50%;
+}
 	
 </style>
 
