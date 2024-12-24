@@ -39,28 +39,6 @@ input#slider_frequency { accent-color: blue; }
 <script>
 
 // -----------------------------------------------
-	
-// const counterEvent = new CustomEvent("counterEvent", {detail: {data: 0}});
-// document.dispatchEvent(counterEvent);
-
-// -----------------------------------------------
-	
-const counterEvent = new Event("counterEventName");
-
-async function processEvent_div_counter(event) {
-	console.log('event: ', event);
-
-	if (event.value < 10) {
-		await play_filter_noise()
-	} 
-	
-}
-	
-document.getElementById("counter").addEventListener("counterEventName", processEvent_div_counter, false);
-
-document.getElementById("counter").dispatchEvent(counterEvent);
-	
-// -----------------------------------------------
 
 async function play_filter_noise() {
 
