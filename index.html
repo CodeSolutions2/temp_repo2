@@ -44,7 +44,7 @@ input#slider_frequency { accent-color: blue; }
 
 async function processEvent_text_input(event) {
 
-	if (document.getElementById("counter_value").value < 10) {
+	if (Number(document.getElementById("counter_value").value) < 10) {
 		await play_filter_noise()
 	} 
 	
