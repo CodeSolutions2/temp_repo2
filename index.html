@@ -60,7 +60,7 @@ async function processEvent_text_input(event) {
 		// -------------------
 		
 		// Update event
-		document.getElementById("counter_value").value = await String(counter_value_number + 1);
+		
 		document.getElementById("counter_display").textContent = document.getElementById("counter_value").value;
 	} 
 	
@@ -94,7 +94,10 @@ async function play_filter_noise() {
 	sourceElement.start(0);
 	
 	// -------------------
-	
+
+	document.getElementById("counter_value").value = await String(counter_value_number + 1);
+
+	// -------------------
 }
 
 
