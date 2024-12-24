@@ -45,8 +45,10 @@ input#slider_frequency { accent-color: blue; }
 async function processEvent_div_counter(event) {
 	console.log('event.value: ', event.value);
 
-	if (event.value < 2) {
+	if (event.value < 10) {
 		await play_filter_noise()
+		document.getElementById("counter").value = document.getElementById("counter").value + 1;
+		document.getElementById("counter").textContent = document.getElementById("counter").value;
 	} 
 	
 }
