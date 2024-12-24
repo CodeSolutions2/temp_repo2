@@ -40,12 +40,22 @@ input#slider_frequency { accent-color: blue; }
   
 <script>
 
+var counter_value_number;
+	
 // -----------------------------------------------
 
 async function processEvent_text_input(event) {
 
-	if (Number(document.getElementById("counter_value").value) < 10) {
-		await play_filter_noise()
+	console.log('counter changed', counter_value_number);
+	
+	if (counter_value_number < 10) {
+		await play_filter_noise();
+		
+		// -------------------
+		
+		// Update event
+		document.getElementById("counter_value").value = await String(counter_value_number + 1);
+		document.getElementById("counter_display").textContent = document.getElementById("counter_value").value;
 	} 
 	
 }
@@ -56,13 +66,20 @@ document.getElementById("counter_value").addEventListener("change", processEvent
 
 async function play_filter_noise() {
 
-	const audioElement = await create_an_audioElement();
-
-	const audioContext = new AudioContext();
-	// default audioContext.sampleRate is 48000, a common value is 44100
-
-	var sourceElement = audioContext.createBufferSource(audioElement);
-
+	counter_value_number = await Number(document.getElementById("counter_value").value);
+	
+	console.log('counter_value_number: ', counter_value_number);
+	
+	if (counter_value_number == 0) {
+		
+		const audioElement = await create_an_audioElement();
+	
+		const audioContext = new AudioContext();
+		// default audioContext.sampleRate is 48000, a common value is 44100
+	
+		var sourceElement = audioContext.createBufferSource(audioElement);
+	}
+	
 	// -------------------
 	
 	const WhiteNoise_AudioBuffer = await create_audio_data(audioContext);
@@ -72,12 +89,6 @@ async function play_filter_noise() {
 	sourceElement.id = "sourceElement_id";			
 	sourceElement.connect(audioContext.destination);
 	sourceElement.start(0);
-
-	// -------------------
-
-	// Update event
-	document.getElementById("counter_value").value = Number(document.getElementById("counter_value").value) + 1;
-	document.getElementById("counter_display").textContent = document.getElementById("counter_value").value;
 	
 	// -------------------
 	
